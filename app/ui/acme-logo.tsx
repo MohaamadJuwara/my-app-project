@@ -7,13 +7,14 @@ export default function AcmeLogo() {
     <div
       className={`${lusitana.className} flex flex-row items-center leading-none text-white`}
     >
-      <Image
-        src="/juwaralogo.png"
-        alt="Juwara Solutions Logo"
-        width={100}
+      <Image 
+        src="/juwaralogo.png" 
+        alt="Juwara Solutions Logo" 
+        width={100} 
         height={100}
         className="rounded-full"
       />
+  
     </div>
   );
 }
