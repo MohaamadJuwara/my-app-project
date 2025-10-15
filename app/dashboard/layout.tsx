@@ -4,6 +4,7 @@ import AcmeLogo from '../ui/acme-logo';
 import { PowerIcon } from '@heroicons/react/24/outline';
 import '../globals.css';
 import { inter } from '../ui/fonts';
+import { ClientThemeToggle } from '../ui/client-theme-toggle';
 
 export default function Layout({
   children,
@@ -14,8 +15,9 @@ export default function Layout({
     <div className="flex h-screen flex-col md:flex-row md:overflow-hidden">
       <div className="w-full flex-none md:w-64">
         <div className="flex h-full flex-col px-3 py-4 md:px-2">
-          <div className="flex h-20 items-end rounded-lg bg-blue-600 p-4 md:h-40">
+          <div className="flex h-20 items-end justify-between rounded-lg bg-blue-600 p-4 md:h-40">
             <AcmeLogo />
+            <ClientThemeToggle />
           </div>
           <div className="flex grow flex-row justify-between space-x-2 md:flex-col md:space-x-0 md:space-y-2">
             <NavLinks />
