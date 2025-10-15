@@ -9,7 +9,7 @@ import AcmeLogo from '../ui/acme-logo';
 export default async function Page() {
   return (
     <main>
-        <h1 className="mb-4 text-xl md:text-2xl text-center font-bold">
+        <h1 className="mb-4 text-xl md:text-2xl text-center font-bold text-gray-900 leading-tight">
         Juwara Solutions Dashboard
       </h1>
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">

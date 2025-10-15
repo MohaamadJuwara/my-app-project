@@ -30,8 +30,8 @@ export default function BlogPage() {
     <div className="min-h-screen bg-gray-50">
       <div className="container mx-auto px-4 py-16">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Our Blog</h1>
-          <p className="text-xl text-gray-600">
+          <h1 className="text-4xl font-bold text-gray-900 mb-4 leading-tight">Our Blog</h1>
+          <p className="text-xl text-gray-700 leading-relaxed">
             Insights, tutorials, and updates from the Juwara Solutions team.
           </p>
         </div>
@@ -43,12 +43,12 @@ export default function BlogPage() {
                 <h2 className="text-xl font-semibold mb-3">
                   <Link 
                     href={`/blog/${post.slug}`}
-                    className="text-gray-900 hover:text-blue-600 transition-colors"
+                    className="text-gray-900 hover:text-blue-600 transition-colors leading-tight"
                   >
                     {post.title}
                   </Link>
                 </h2>
-                <p className="text-gray-600 mb-4">{post.excerpt}</p>
+                <p className="text-gray-700 mb-4 leading-relaxed">{post.excerpt}</p>
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-gray-500">{post.date}</span>
                   <Link 
