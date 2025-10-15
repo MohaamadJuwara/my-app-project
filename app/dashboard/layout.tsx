@@ -2,7 +2,7 @@ import { Suspense } from 'react';
 import { NavLinks } from '../ui/dashboard/nav-links';
 import AcmeLogo from '../ui/acme-logo';
 import { PowerIcon } from '@heroicons/react/24/outline';
-import '../ui/global.css';
+import '../globals.css';
 import { inter } from '../ui/fonts';
 
 export default function Layout({
