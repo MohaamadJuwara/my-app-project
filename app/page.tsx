@@ -46,14 +46,14 @@ export default function Page() {
       
       {/* Professional Theme Toggle Footer - Left Corner */}
       <footer className="mt-8 py-4">
-        <div className="flex items-start justify-start">
-          <div className="flex flex-col items-start space-y-2">
+        <div className="flex items-center justify-start space-x-3">
+          <ClientThemeToggle />
+          <div className="flex flex-col">
             <div className="text-sm text-gray-600 font-medium">
-              Choose your preferred theme
+              Theme
             </div>
-            <ClientThemeToggle />
-            <div className="text-xs text-gray-500 max-w-xs">
-              Switch between Light, Dark, and Transparent modes
+            <div className="text-xs text-gray-500">
+              Light • Dark • Transparent
             </div>
           </div>
         </div>
