@@ -1,33 +1,54 @@
-import AcmeLogo from './ui/acme-logo';
-import { ArrowRightIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 
-export default function Page() {
+export default function HomePage() {
   return (
-    <main className="flex min-h-screen flex-col p-6">
-      <div className="flex h-20 shrink-0 items-end rounded-lg bg-blue-500 p-4 md:h-52">
-        <AcmeLogo />
-      </div>
-      <div className="mt-4 flex grow flex-col gap-4 md:flex-row">
-        <div className="flex flex-col justify-center gap-6 rounded-lg bg-gray-50 px-6 py-10 md:w-2/5 md:px-20">
-          <p className={`text-xl text-gray-800 md:text-3xl md:leading-normal`}>
-            <strong>Welcome to Juwara Solutions.</strong> This is the example for the{' '}
-            <a href="https://nextjs.org/learn/" className="text-blue-500">
-              Juwara Solutions
-            </a>
-            , brought to you by Juwara Solutions.
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+      <div className="container mx-auto px-4 py-16">
+        <div className="text-center">
+          <h1 className="text-5xl font-bold text-gray-900 mb-6">
+            Welcome to Juwara Solutions
+          </h1>
+          <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+            Your trusted partner for innovative software solutions and digital transformation.
           </p>
-          <Link
-            href="/dashboard"
-            className="flex items-center gap-5 self-start rounded-lg bg-blue-500 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-blue-400 md:text-base"
-          >
-            <span>Go to Dashboard</span> <ArrowRightIcon className="w-5 md:w-6" />
-          </Link>
-        </div>
-        <div className="flex items-center justify-center p-6 md:w-3/5 md:px-28 md:py-12">
-          {/* Add Hero Images Here */}
+          
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+            <Link 
+              href="/blog" 
+              className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              View Our Blog
+            </Link>
+            <Link 
+              href="/dashboard" 
+              className="bg-green-600 text-white px-8 py-3 rounded-lg hover:bg-green-700 transition-colors"
+            >
+              Go to Dashboard
+            </Link>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8 mt-16">
+            <div className="bg-white p-6 rounded-lg shadow-md">
+              <h3 className="text-xl font-semibold mb-3">Innovation</h3>
+              <p className="text-gray-600">
+                Cutting-edge solutions that drive your business forward with the latest technology.
+              </p>
+            </div>
+            <div className="bg-white p-6 rounded-lg shadow-md">
+              <h3 className="text-xl font-semibold mb-3">Quality</h3>
+              <p className="text-gray-600">
+                High-quality software development with attention to detail and best practices.
+              </p>
+            </div>
+            <div className="bg-white p-6 rounded-lg shadow-md">
+              <h3 className="text-xl font-semibold mb-3">Support</h3>
+              <p className="text-gray-600">
+                Comprehensive support and maintenance to ensure your success.
+              </p>
+            </div>
+          </div>
         </div>
       </div>
-    </main>
+    </div>
   );
 }
