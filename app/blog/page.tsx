@@ -40,7 +40,7 @@ function getPost(slug: string): { title: string; content: string } {
     };
 }
 
-export default function PeoplePage() {
+function PeoplePage() {
   return (
     <div>
       <h1>People</h1>
