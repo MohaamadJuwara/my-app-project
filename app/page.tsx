@@ -7,13 +7,8 @@ import { ClientThemeToggle } from './ui/client-theme-toggle';
 export default function Page() {
   return (
     <main className="flex min-h-screen flex-col p-6">
-      <div className="flex h-20 shrink-0 items-end justify-between rounded-lg bg-blue-500 p-4 md:h-52">
-        <div className="flex flex-col items-start">
-          <AcmeLogo />
-          <div className="mt-2">
-            <ClientThemeToggle />
-          </div>
-        </div>
+      <div className="flex h-20 shrink-0 items-end rounded-lg bg-blue-500 p-4 md:h-52">
+        <AcmeLogo />
       </div>
       <div className="mt-4 flex grow flex-col gap-4 md:flex-row">
         <div className="flex flex-col justify-center gap-6 rounded-lg bg-gray-50 px-6 py-10 md:w-2/5 md:px-20">
@@ -48,7 +43,21 @@ export default function Page() {
           />
         </div>
       </div>
+      
+      {/* Professional Theme Toggle Footer */}
+      <footer className="mt-8 py-6 border-t border-gray-200 bg-white/50 backdrop-blur-sm">
+        <div className="flex flex-col items-center justify-center space-y-4">
+          <div className="text-sm text-gray-600 font-medium">
+            Choose your preferred theme
+          </div>
+          <div className="flex items-center space-x-4">
+            <ClientThemeToggle />
+          </div>
+          <div className="text-xs text-gray-500 text-center max-w-md">
+            Switch between Light, Dark, and Transparent modes for the best viewing experience
+          </div>
+        </div>
+      </footer>
     </main>
-    
   );
 }
