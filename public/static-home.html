@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juwara Solutions</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+        
+        .container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 1.5rem;
+        }
+        
+        .header {
+            height: 5rem;
+            display: flex;
+            align-items: flex-end;
+            border-radius: 0.5rem;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            color: white;
+        }
+        
+        .logo img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin-right: 1rem;
+        }
+        
+        .logo h1 {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        @media (min-width: 768px) {
+            .content {
+                flex-direction: row;
+            }
+        }
+        
+        .welcome-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 1.5rem;
+            border-radius: 0.5rem;
+            background: #f9fafb;
+            padding: 2rem;
+        }
+        
+        @media (min-width: 768px) {
+            .welcome-section {
+                flex: 0 0 40%;
+            }
+        }
+        
+        .welcome-section h2 {
+            font-size: 1.5rem;
+            color: #1f2937;
+            margin-bottom: 1rem;
+        }
+        
+        @media (min-width: 768px) {
+            .welcome-section h2 {
+                font-size: 2rem;
+            }
+        }
+        
+        .welcome-section p {
+            font-size: 1.1rem;
+            color: #374151;
+            margin-bottom: 1.5rem;
+        }
+        
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: #3b82f6;
+            color: white;
+            text-decoration: none;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            transition: background 0.2s;
+            align-self: flex-start;
+        }
+        
+        .cta-button:hover {
+            background: #2563eb;
+        }
+        
+        .hero-section {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        
+        @media (min-width: 768px) {
+            .hero-section {
+                flex: 0 0 60%;
+            }
+        }
+        
+        .hero-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .theme-toggle {
+            position: fixed;
+            bottom: 2rem;
+            left: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            background: white;
+            border-radius: 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            border: 2px solid #e5e7eb;
+        }
+        
+        .theme-button {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+            border: 2px solid #d1d5db;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .theme-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        
+        .theme-button svg {
+            width: 1.25rem;
+            height: 1.25rem;
+            color: #f59e0b;
+        }
+        
+        .theme-info {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .theme-info .label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #374151;
+        }
+        
+        .theme-info .modes {
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <img src="/juwaralogo.png" alt="Juwara Solutions Logo">
+                <h1>Juwara Solutions</h1>
+            </div>
+        </div>
+        
+        <div class="content">
+            <div class="welcome-section">
+                <h2>Welcome to Juwara Solutions</h2>
+                <p>
+                    <strong>Your trusted partner for innovative software solutions and digital transformation.</strong>
+                    This is the example for the Juwara Solutions, brought to you by Juwara Solutions.
+                </p>
+                <a href="/dashboard" class="cta-button">
+                    Go to Dashboard
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                    </svg>
+                </a>
+            </div>
+            
+            <div class="hero-section">
+                <img src="/hero-mobile.png" alt="Dashboard Screenshot" class="hero-image">
+            </div>
+        </div>
+    </div>
+    
+    <div class="theme-toggle">
+        <div class="theme-button">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z"></path>
+            </svg>
+        </div>
+        <div class="theme-info">
+            <div class="label">Theme</div>
+            <div class="modes">Light • Dark • Transparent</div>
+        </div>
+    </div>
+</body>
+</html>

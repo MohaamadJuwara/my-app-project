@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Test - Juwara Solutions</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+        .button {
+            display: inline-block;
+            padding: 15px 30px;
+            background: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            margin: 10px;
+            transition: background 0.3s;
+        }
+        .button:hover {
+            background: #45a049;
+        }
+        .status {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎉 Mobile Access Working!</h1>
+        <p>If you can see this page, your mobile device is successfully connecting to the server!</p>
+        
+        <div class="status">
+            <h3>Connection Status: ✅ SUCCESS</h3>
+            <p>Your phone can access the development server at 192.168.1.98:3000</p>
+        </div>
+        
+        <a href="/" class="button">Go to Main Website</a>
+        <a href="/dashboard" class="button">Go to Dashboard</a>
+        
+        <div style="margin-top: 40px; font-size: 0.9rem; opacity: 0.8;">
+            <p>Juwara Solutions - Mobile Development Test</p>
+            <p>Server: 192.168.1.98:3000</p>
+        </div>
+    </div>
+</body>
+</html>
