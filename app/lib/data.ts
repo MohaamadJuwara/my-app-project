@@ -1,4 +1,4 @@
-import postgres from 'postgres';
+import { neon } from '@neondatabase/serverless';
 import {
   CustomerField,
   CustomersTableType,
@@ -9,34 +9,66 @@ import {
 } from './definitions';
 import { formatCurrency } from './utils';
 
-const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
-
-export async function fetchRevenue() {
+export async function fetchRevenue(): Promise<Revenue[]> {
   try {
-    // Artificially delay a response for demo purposes.
-    // Don't do this in production :)
-
-    // console.log('Fetching revenue data...');
-    // await new Promise((resolve) => setTimeout(resolve, 3000));
-
-    const data = await sql<Revenue[]>`SELECT * FROM revenue`;
-
-    // console.log('Data fetch completed after 3 seconds.');
-
-    return data;
+    const sql = neon(`${process.env.DATABASE_URL}`);
+    
+    // Check if revenue table exists, if not create it with sample data
+    try {
+      const data = await sql<Revenue[]>`SELECT * FROM revenue ORDER BY month`;
+      return data as Revenue[];
+    } catch (tableError) {
+      // Create revenue table with sample data
+      await sql`
+        CREATE TABLE IF NOT EXISTS revenue (
+          month VARCHAR(4) NOT NULL UNIQUE,
+          revenue INTEGER NOT NULL
+        );
+      `;
+      
+      // Insert sample revenue data
+      await sql`
+        INSERT INTO revenue (month, revenue) VALUES 
+        ('Jan', 2000),
+        ('Feb', 1800),
+        ('Mar', 2200),
+        ('Apr', 2500),
+        ('May', 2300),
+        ('Jun', 3200),
+        ('Jul', 3500),
+        ('Aug', 3700),
+        ('Sep', 2500),
+        ('Oct', 2800),
+        ('Nov', 3000),
+        ('Dec', 4800)
+        ON CONFLICT (month) DO NOTHING;
+      `;
+      
+      const data = await sql<Revenue[]>`SELECT * FROM revenue ORDER BY month`;
+      return data as Revenue[];
+    }
   } catch (error) {
     console.error('Database Error:', error);
     throw new Error('Failed to fetch revenue data.');
   }
 }
 
-export async function fetchLatestInvoices() {
+export async function fetchLatestInvoices(): Promise<LatestInvoice[]> {
   try {
+    const sql = neon(`${process.env.DATABASE_URL}`);
+    
+    // Update the existing invoices table to include date column if it doesn't exist
+    try {
+      await sql`ALTER TABLE invoices ADD COLUMN IF NOT EXISTS date DATE DEFAULT CURRENT_DATE`;
+    } catch (alterError) {
+      // Column might already exist, ignore error
+    }
+    
     const data = await sql<LatestInvoiceRaw[]>`
       SELECT invoices.amount, customers.name, customers.image_url, customers.email, invoices.id
       FROM invoices
       JOIN customers ON invoices.customer_id = customers.id
-      ORDER BY invoices.date DESC
+      ORDER BY invoices.created_at DESC
       LIMIT 5`;
 
     const latestInvoices = data.map((invoice) => ({
@@ -52,6 +84,8 @@ export async function fetchLatestInvoices() {
 
 export async function fetchCardData() {
   try {
+    const sql = neon(`${process.env.DATABASE_URL}`);
+    
     // You can probably combine these into a single SQL query
     // However, we are intentionally splitting them to demonstrate
     // how to initialize multiple queries in parallel with JS.
@@ -93,11 +127,13 @@ export async function fetchFilteredInvoices(
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
 
   try {
-    const invoices = await sql<InvoicesTable[]>`
+    const sql = neon(`${process.env.DATABASE_URL}`);
+    
+    const invoices = await sql`
       SELECT
         invoices.id,
         invoices.amount,
-        invoices.date,
+        invoices.created_at as date,
         invoices.status,
         customers.name,
         customers.email,
@@ -108,9 +144,9 @@ export async function fetchFilteredInvoices(
         customers.name ILIKE ${`%${query}%`} OR
         customers.email ILIKE ${`%${query}%`} OR
         invoices.amount::text ILIKE ${`%${query}%`} OR
-        invoices.date::text ILIKE ${`%${query}%`} OR
+        invoices.created_at::text ILIKE ${`%${query}%`} OR
         invoices.status ILIKE ${`%${query}%`}
-      ORDER BY invoices.date DESC
+      ORDER BY invoices.created_at DESC
       LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
     `;
 
@@ -123,6 +159,8 @@ export async function fetchFilteredInvoices(
 
 export async function fetchInvoicesPages(query: string) {
   try {
+    const sql = neon(`${process.env.DATABASE_URL}`);
+    
     const data = await sql`SELECT COUNT(*)
     FROM invoices
     JOIN customers ON invoices.customer_id = customers.id
@@ -130,7 +168,7 @@ export async function fetchInvoicesPages(query: string) {
       customers.name ILIKE ${`%${query}%`} OR
       customers.email ILIKE ${`%${query}%`} OR
       invoices.amount::text ILIKE ${`%${query}%`} OR
-      invoices.date::text ILIKE ${`%${query}%`} OR
+      invoices.created_at::text ILIKE ${`%${query}%`} OR
       invoices.status ILIKE ${`%${query}%`}
   `;
 
@@ -144,7 +182,9 @@ export async function fetchInvoicesPages(query: string) {
 
 export async function fetchInvoiceById(id: string) {
   try {
-    const data = await sql<InvoiceForm[]>`
+    const sql = neon(`${process.env.DATABASE_URL}`);
+    
+    const data = await sql`
       SELECT
         invoices.id,
         invoices.customer_id,
@@ -169,7 +209,9 @@ export async function fetchInvoiceById(id: string) {
 
 export async function fetchCustomers() {
   try {
-    const customers = await sql<CustomerField[]>`
+    const sql = neon(`${process.env.DATABASE_URL}`);
+    
+    const customers = await sql`
       SELECT
         id,
         name
@@ -186,7 +228,9 @@ export async function fetchCustomers() {
 
 export async function fetchFilteredCustomers(query: string) {
   try {
-    const data = await sql<CustomersTableType[]>`
+    const sql = neon(`${process.env.DATABASE_URL}`);
+    
+    const data = await sql`
 		SELECT
 		  customers.id,
 		  customers.name,

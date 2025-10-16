@@ -7,7 +7,8 @@ import {
   HomeIcon, 
   DocumentTextIcon, 
   UserGroupIcon,
-  ChartBarIcon 
+  ChartBarIcon ,
+ 
 } from '@heroicons/react/24/outline';
 
 const links = [
@@ -15,6 +16,7 @@ const links = [
   { name: 'Invoices', href: '/dashboard/invoices', icon: DocumentTextIcon },
   { name: 'Customers', href: '/dashboard/customers', icon: UserGroupIcon },
   { name: 'Analytics', href: '/dashboard/analytics', icon: ChartBarIcon },
+
 ];
 
 export function NavLinks() {

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { ThemeProvider } from './contexts/theme-context';
+import { inter } from './ui/fonts';
 
 export default function RootLayout({
   children,
@@ -9,7 +10,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
+      <body className={`${inter.className} antialiased`}>
         <ThemeProvider>
           {children}
         </ThemeProvider>

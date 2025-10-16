@@ -3,10 +3,37 @@ import { ArrowRightIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ClientThemeToggle } from './ui/client-theme-toggle';
+import { CommentsDisplay } from './ui/comments-display';
+import styles from './ui/home.module.css';
+import { neon } from '@neondatabase/serverless';
 
 export default function Page() {
+  async function create(formData: FormData) {
+    'use server';
+    
+    try {
+      // Connect to the Neon database
+      const sql = neon(`${process.env.DATABASE_URL}`);
+      const comment = formData.get('comment');
+      
+      // Validate comment
+      if (!comment || comment.toString().trim() === '') {
+        throw new Error('Comment cannot be empty');
+      }
+      
+      // Insert the comment from the form into the Postgres database
+      await sql`INSERT INTO comments (comment) VALUES (${comment})`;
+      
+      console.log('Comment inserted successfully:', comment);
+    } catch (error) {
+      console.error('Error inserting comment:', error);
+      throw error;
+    }
+  }
+
   return (
     <main className="flex min-h-screen flex-col p-6">
+      <div className={styles.shape}/>
       <div className="flex h-20 shrink-0 items-end rounded-lg bg-blue-500 p-4 md:h-52">
         <AcmeLogo />
       </div>
@@ -43,6 +70,35 @@ export default function Page() {
           />
         </div>
       </div>
+      
+      {/* Comments Form Section */}
+      <div className="mt-8 p-6 bg-white rounded-lg shadow-md">
+        <h2 className="text-2xl font-bold text-gray-900 mb-4">Leave a Comment</h2>
+        <form action={create} className="space-y-4">
+          <div>
+            <label htmlFor="comment" className="block text-sm font-medium text-gray-700 mb-2">
+              Your Comment
+            </label>
+            <textarea
+              id="comment"
+              name="comment"
+              rows={4}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Write your comment here..."
+              required
+            />
+          </div>
+          <button
+            type="submit"
+            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+          >
+            Submit Comment
+          </button>
+        </form>
+      </div>
+      
+      {/* Comments Display */}
+      <CommentsDisplay />
       
       {/* Professional Theme Toggle Footer - Left Corner */}
       <footer className="mt-8 py-4">
