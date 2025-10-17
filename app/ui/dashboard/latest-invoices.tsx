@@ -1,16 +1,8 @@
 import Image from 'next/image';
+import { fetchLatestInvoices } from '../../lib/data';
 
-interface LatestInvoicesProps {
-  latestInvoices: {
-    id: number;
-    amount: string;
-    name: string;
-    email: string;
-    image_url: string;
-  }[];
-}
-
-export function LatestInvoices({ latestInvoices }: LatestInvoicesProps) {
+export async function LatestInvoices() {
+  const latestInvoices = await fetchLatestInvoices();
   return (
     <div className="flex w-full flex-col md:col-span-4">
       <h2 className="mb-4 text-xl md:text-2xl">Latest Invoices</h2>

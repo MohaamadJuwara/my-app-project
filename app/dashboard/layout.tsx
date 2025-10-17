@@ -5,9 +5,8 @@ import { PowerIcon } from '@heroicons/react/24/outline';
 import '../globals.css';
 import { inter } from '../ui/fonts';
 import { ClientThemeToggle } from '../ui/client-theme-toggle';
-import SideNav from '../ui/dashboard/sidenav';
 
-export default function RootLayout({
+export default function Layout({
   children,
 }: {
   children: React.ReactNode;
@@ -15,7 +14,6 @@ export default function RootLayout({
   return (
     <div className="flex h-screen flex-col md:flex-row md:overflow-hidden">
       <div className="w-full flex-none md:w-64">
-        <SideNav />
         <div className="flex h-full flex-col px-3 py-4 md:px-2">
           <div className="flex h-20 items-end rounded-lg bg-blue-600 p-4 md:h-40">
             <AcmeLogo />

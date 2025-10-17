@@ -15,7 +15,7 @@ export async function fetchRevenue(): Promise<Revenue[]> {
     
     // Check if revenue table exists, if not create it with sample data
     try {
-      const data = await sql<Revenue[]>`SELECT * FROM revenue ORDER BY month`;
+      const data = await sql`SELECT * FROM revenue ORDER BY month`;
       return data as Revenue[];
     } catch (tableError) {
       // Create revenue table with sample data
@@ -44,7 +44,7 @@ export async function fetchRevenue(): Promise<Revenue[]> {
         ON CONFLICT (month) DO NOTHING;
       `;
       
-      const data = await sql<Revenue[]>`SELECT * FROM revenue ORDER BY month`;
+      const data = await sql`SELECT * FROM revenue ORDER BY month`;
       return data as Revenue[];
     }
   } catch (error) {
@@ -53,7 +53,7 @@ export async function fetchRevenue(): Promise<Revenue[]> {
   }
 }
 
-export async function fetchLatestInvoices(): Promise<LatestInvoice[]> {
+export async function fetchLatestInvoices(): Promise<LatestInvoiceRaw[]> {
   try {
     const sql = neon(`${process.env.DATABASE_URL}`);
     
@@ -64,7 +64,7 @@ export async function fetchLatestInvoices(): Promise<LatestInvoice[]> {
       // Column might already exist, ignore error
     }
     
-    const data = await sql<LatestInvoiceRaw[]>`
+    const data = await sql`
       SELECT invoices.amount, customers.name, customers.image_url, customers.email, invoices.id
       FROM invoices
       JOIN customers ON invoices.customer_id = customers.id
@@ -73,8 +73,8 @@ export async function fetchLatestInvoices(): Promise<LatestInvoice[]> {
 
     const latestInvoices = data.map((invoice) => ({
       ...invoice,
-      amount: formatCurrency(invoice.amount),
-    }));
+      amount: Number(invoice.amount),
+    })) as LatestInvoiceRaw[];
     return latestInvoices;
   } catch (error) {
     console.error('Database Error:', error);

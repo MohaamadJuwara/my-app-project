@@ -1,11 +1,10 @@
-interface RevenueChartProps {
-  revenue: {
-    month: string;
-    revenue: number;
-  }[];
-}
+import { generateYAxis } from '../../lib/utils';
+import { CalendarIcon } from '@heroicons/react/24/outline';
+import { lusitana } from '../../ui/fonts';
+import { fetchRevenue } from '../../lib/data';
 
-export function RevenueChart({ revenue }: RevenueChartProps) {
+export async function RevenueChart() {
+  const revenue = await fetchRevenue();
   return (
     <div className="w-full md:col-span-4">
       <h2 className="mb-4 text-xl md:text-2xl">Recent Revenue</h2>

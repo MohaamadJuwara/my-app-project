@@ -33,6 +33,17 @@ export function LatestInvoicesSkeleton() {
   );
 }
 
+export function CardsSkeleton() {
+  return (
+    <>
+      <CardSkeleton />
+      <CardSkeleton />
+      <CardSkeleton />
+      <CardSkeleton />
+    </>
+  );
+}
+
 export function RevenueChartSkeleton() {
   return (
     <div className="w-full md:col-span-4">
