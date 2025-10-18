@@ -9,11 +9,10 @@ import {
 // GET /api/comments/[id] - Get a specific comment
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
   try {
-    const { id: idParam } = await params;
-    const id = parseInt(idParam);
+    const id = parseInt(params.id);
     
     if (isNaN(id)) {
       return NextResponse.json(
@@ -44,11 +43,10 @@ export async function GET(
 // PUT /api/comments/[id] - Update a comment
 export async function PUT(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
   try {
-    const { id: idParam } = await params;
-    const id = parseInt(idParam);
+    const id = parseInt(params.id);
     
     if (isNaN(id)) {
       return NextResponse.json(
@@ -89,11 +87,10 @@ export async function PUT(
 // DELETE /api/comments/[id] - Delete a comment (soft delete)
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
   try {
-    const { id: idParam } = await params;
-    const id = parseInt(idParam);
+    const id = parseInt(params.id);
     
     if (isNaN(id)) {
       return NextResponse.json(
