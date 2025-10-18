@@ -1,6 +1,23 @@
 // Database connection and utilities for Juwara Solutions
 import { neon } from '@neondatabase/serverless';
 
+// Get database connection with error handling
+function getDatabaseConnection() {
+  const databaseUrl = process.env.DATABASE_URL;
+  
+  if (!databaseUrl) {
+    console.error('Database Error: DATABASE_URL environment variable is not set');
+    throw new Error('Database connection string provided to `neon()` is not a valid URL. Connection string: undefined');
+  }
+  
+  try {
+    return neon(databaseUrl);
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw error;
+  }
+}
+
 // Comment interface
 export interface Comment {
   id: number;
@@ -15,7 +32,7 @@ export interface Comment {
 // Create comments table
 export async function createCommentsTable() {
   try {
-    const sql = neon(`${process.env.DATABASE_URL}`);
+    const sql = getDatabaseConnection();
     
     await sql`
       CREATE TABLE IF NOT EXISTS comments (
@@ -52,7 +69,7 @@ export async function createCommentsTable() {
 // Insert a new comment
 export async function insertComment(comment: string, userId?: number, postId?: number) {
   try {
-    const sql = neon(`${process.env.DATABASE_URL}`);
+    const sql = getDatabaseConnection();
     const result = await sql`
       INSERT INTO comments (comment, user_id, post_id)
       VALUES (${comment}, ${userId}, ${postId})
@@ -68,7 +85,7 @@ export async function insertComment(comment: string, userId?: number, postId?: n
 // Get all comments
 export async function getAllComments() {
   try {
-    const sql = neon(`${process.env.DATABASE_URL}`);
+    const sql = getDatabaseConnection();
     const result = await sql`
       SELECT * FROM comments 
       WHERE is_active = true 
@@ -84,7 +101,7 @@ export async function getAllComments() {
 // Get comments by post ID
 export async function getCommentsByPostId(postId: number) {
   try {
-    const sql = neon(`${process.env.DATABASE_URL}`);
+    const sql = getDatabaseConnection();
     const result = await sql`
       SELECT * FROM comments 
       WHERE post_id = ${postId} AND is_active = true 
@@ -100,7 +117,7 @@ export async function getCommentsByPostId(postId: number) {
 // Get comment by ID
 export async function getCommentById(id: number) {
   try {
-    const sql = neon(`${process.env.DATABASE_URL}`);
+    const sql = getDatabaseConnection();
     const result = await sql`
       SELECT * FROM comments 
       WHERE id = ${id} AND is_active = true;
@@ -115,7 +132,7 @@ export async function getCommentById(id: number) {
 // Update comment
 export async function updateComment(id: number, comment: string) {
   try {
-    const sql = neon(`${process.env.DATABASE_URL}`);
+    const sql = getDatabaseConnection();
     const result = await sql`
       UPDATE comments 
       SET comment = ${comment}, updated_at = CURRENT_TIMESTAMP
@@ -132,7 +149,7 @@ export async function updateComment(id: number, comment: string) {
 // Delete comment (soft delete)
 export async function deleteComment(id: number) {
   try {
-    const sql = neon(`${process.env.DATABASE_URL}`);
+    const sql = getDatabaseConnection();
     const result = await sql`
       UPDATE comments 
       SET is_active = false, updated_at = CURRENT_TIMESTAMP
@@ -149,7 +166,7 @@ export async function deleteComment(id: number) {
 // Hard delete comment (permanent)
 export async function hardDeleteComment(id: number) {
   try {
-    const sql = neon(`${process.env.DATABASE_URL}`);
+    const sql = getDatabaseConnection();
     const result = await sql`
       DELETE FROM comments 
       WHERE id = ${id}
