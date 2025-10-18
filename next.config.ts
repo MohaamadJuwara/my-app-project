@@ -3,7 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   /* config options here */
   experimental: {
-    cacheComponents: true,
+    // cacheComponents: true, // Disabled due to prerendering conflicts with database operations
   },
   async headers() {
     return [
