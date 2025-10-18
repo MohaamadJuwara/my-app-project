@@ -94,10 +94,10 @@ export async function fetchLatestInvoices(): Promise<LatestInvoiceRaw[]> {
     console.error('Database Error:', error);
     // Return sample data as fallback (including prerendering errors)
     return [
-      { id: 1, amount: 666, name: 'John Doe', email: 'john@example.com', image_url: '/customers/default-avatar.svg' },
-      { id: 2, amount: 500, name: 'Jane Smith', email: 'jane@example.com', image_url: '/customers/default-avatar.svg' },
-      { id: 3, amount: 666, name: 'Bob Johnson', email: 'bob@example.com', image_url: '/customers/default-avatar.svg' },
-      { id: 4, amount: 300, name: 'John Doe', email: 'john@example.com', image_url: '/customers/default-avatar.svg' },
+      { id: '1', amount: 666, name: 'John Doe', email: 'john@example.com', image_url: '/customers/default-avatar.svg' },
+      { id: '2', amount: 500, name: 'Jane Smith', email: 'jane@example.com', image_url: '/customers/default-avatar.svg' },
+      { id: '3', amount: 666, name: 'Bob Johnson', email: 'bob@example.com', image_url: '/customers/default-avatar.svg' },
+      { id: '4', amount: 300, name: 'John Doe', email: 'john@example.com', image_url: '/customers/default-avatar.svg' },
     ];
   }
 }
