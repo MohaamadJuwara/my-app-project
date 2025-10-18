@@ -9,20 +9,20 @@ import {
 // GET /api/comments/[id] - Get a specific comment
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = await params;
-    const commentId = parseInt(id);
+    const params = await context.params;
+    const id = parseInt(params.id);
     
-    if (isNaN(commentId)) {
+    if (isNaN(id)) {
       return NextResponse.json(
         { error: 'Invalid comment ID' },
         { status: 400 }
       );
     }
     
-    const comment = await getCommentById(commentId);
+    const comment = await getCommentById(id);
     
     if (!comment) {
       return NextResponse.json(
@@ -44,13 +44,13 @@ export async function GET(
 // PUT /api/comments/[id] - Update a comment
 export async function PUT(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = await params;
-    const commentId = parseInt(id);
+    const params = await context.params;
+    const id = parseInt(params.id);
     
-    if (isNaN(commentId)) {
+    if (isNaN(id)) {
       return NextResponse.json(
         { error: 'Invalid comment ID' },
         { status: 400 }
@@ -67,7 +67,7 @@ export async function PUT(
       );
     }
     
-    const updatedComment = await updateComment(commentId, comment);
+    const updatedComment = await updateComment(id, comment);
     
     if (!updatedComment) {
       return NextResponse.json(
@@ -89,20 +89,20 @@ export async function PUT(
 // DELETE /api/comments/[id] - Delete a comment (soft delete)
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = await params;
-    const commentId = parseInt(id);
+    const params = await context.params;
+    const id = parseInt(params.id);
     
-    if (isNaN(commentId)) {
+    if (isNaN(id)) {
       return NextResponse.json(
         { error: 'Invalid comment ID' },
         { status: 400 }
       );
     }
     
-    const deletedComment = await deleteComment(commentId);
+    const deletedComment = await deleteComment(id);
     
     if (!deletedComment) {
       return NextResponse.json(
