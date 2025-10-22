@@ -1,14 +1,36 @@
+'use client';
 import { Suspense } from 'react';
 import { CardSkeleton } from '../../ui/skeletons';
 import { Card } from '../../ui/dashboard/cards';
+import pagination from '../../ui/invoices/pagination';
+import {lusitana} from '../../ui/fonts';
+import Search from '../../ui/search';
+import Table from '../../ui/invoices/table';
+import { CreateInvoice } from '../../ui/invoices/buttons';
+import InvoicesTableWrapper from './invoices-table';
 import { 
   DocumentTextIcon, 
   PlusIcon, 
   MagnifyingGlassIcon,
   FunnelIcon 
 } from '@heroicons/react/24/outline';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 export default function InvoicesPage() {
+  const pathname = usePathname();
+  const { replace } = useRouter();  
+  const searchParams = useSearchParams();
+  const query = searchParams.get('query') || '';
+  const currentPage = parseInt(searchParams.get('page') || '1');
+  function handleSearch(term: string) {
+    const params = new URLSearchParams(searchParams);
+    if (term) {
+      params.set('query', term);
+    } else {
+      params.delete('query');
+    }
+    replace(`${pathname}?${params.toString()}`);
+  }
   return (
     <main>
       <div className="flex items-center justify-between mb-6">
@@ -23,28 +45,32 @@ export default function InvoicesPage() {
       
       {/* Invoice Stats Cards */}
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 mb-8">
-        <Suspense fallback={<CardSkeleton />}>
+        <Suspense key={query + currentPage} fallback={<CardSkeleton />}>
+       
           <Card 
             title="Total Invoices" 
             value="1,456" 
             type="invoices" 
           />
         </Suspense>
-        <Suspense fallback={<CardSkeleton />}>
+        <Suspense  fallback={<CardSkeleton />}>
+     
           <Card 
             title="Paid Invoices" 
             value="1,234" 
             type="collected" 
           />
         </Suspense>
-        <Suspense fallback={<CardSkeleton />}>
+        <Suspense  fallback={<CardSkeleton />}>
+     
           <Card 
             title="Pending Invoices" 
             value="222" 
             type="pending" 
           />
         </Suspense>
-        <Suspense fallback={<CardSkeleton />}>
+        <Suspense  fallback={<CardSkeleton />}>
+    
           <Card 
             title="Total Revenue" 
             value="$89,456" 
@@ -60,6 +86,8 @@ export default function InvoicesPage() {
           <input
             type="text"
             placeholder="Search invoices..."
+            value={query}
+            onChange={(e) => handleSearch(e.target.value)}
             className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
         </div>
@@ -69,124 +97,13 @@ export default function InvoicesPage() {
         </button>
       </div>
 
-      {/* Recent Invoices Table */}
-      <div className="rounded-xl bg-gray-50 p-6 shadow-sm">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold">Recent Invoices</h2>
-          <span className="text-sm text-gray-600">Showing 10 of 1,456 invoices</span>
-        </div>
-        
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b">
-                <th className="text-left p-3">Invoice #</th>
-                <th className="text-left p-3">Customer</th>
-                <th className="text-left p-3">Amount</th>
-                <th className="text-left p-3">Status</th>
-                <th className="text-left p-3">Date</th>
-                <th className="text-left p-3">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr className="border-b hover:bg-gray-50">
-                <td className="p-3 font-medium">INV-001</td>
-                <td className="p-3">John Doe</td>
-                <td className="p-3">$1,234.56</td>
-                <td className="p-3">
-                  <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">
-                    Paid
-                  </span>
-                </td>
-                <td className="p-3">2024-01-15</td>
-                <td className="p-3">
-                  <button className="text-blue-600 hover:text-blue-800 text-xs">View</button>
-                </td>
-              </tr>
-              <tr className="border-b hover:bg-gray-50">
-                <td className="p-3 font-medium">INV-002</td>
-                <td className="p-3">Jane Smith</td>
-                <td className="p-3">$2,345.67</td>
-                <td className="p-3">
-                  <span className="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs">
-                    Pending
-                  </span>
-                </td>
-                <td className="p-3">2024-01-14</td>
-                <td className="p-3">
-                  <button className="text-blue-600 hover:text-blue-800 text-xs">View</button>
-                </td>
-              </tr>
-              <tr className="border-b hover:bg-gray-50">
-                <td className="p-3 font-medium">INV-003</td>
-                <td className="p-3">Bob Johnson</td>
-                <td className="p-3">$567.89</td>
-                <td className="p-3">
-                  <span className="px-2 py-1 bg-red-100 text-red-800 rounded-full text-xs">
-                    Overdue
-                  </span>
-                </td>
-                <td className="p-3">2024-01-10</td>
-                <td className="p-3">
-                  <button className="text-blue-600 hover:text-blue-800 text-xs">View</button>
-                </td>
-              </tr>
-              <tr className="border-b hover:bg-gray-50">
-                <td className="p-3 font-medium">INV-004</td>
-                <td className="p-3">Alice Brown</td>
-                <td className="p-3">$3,456.78</td>
-                <td className="p-3">
-                  <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">
-                    Paid
-                  </span>
-                </td>
-                <td className="p-3">2024-01-12</td>
-                <td className="p-3">
-                  <button className="text-blue-600 hover:text-blue-800 text-xs">View</button>
-                </td>
-              </tr>
-              <tr className="border-b hover:bg-gray-50">
-                <td className="p-3 font-medium">INV-005</td>
-                <td className="p-3">Charlie Wilson</td>
-                <td className="p-3">$1,789.23</td>
-                <td className="p-3">
-                  <span className="px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs">
-                    Pending
-                  </span>
-                </td>
-                <td className="p-3">2024-01-13</td>
-                <td className="p-3">
-                  <button className="text-blue-600 hover:text-blue-800 text-xs">View</button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        
-        {/* Pagination */}
-        <div className="flex items-center justify-between mt-6">
-          <div className="text-sm text-gray-600">
-            Showing 1 to 5 of 1,456 results
-          </div>
-          <div className="flex items-center gap-2">
-            <button className="px-3 py-1 border border-gray-300 rounded text-sm hover:bg-gray-50">
-              Previous
-            </button>
-            <button className="px-3 py-1 bg-blue-600 text-white rounded text-sm">
-              1
-            </button>
-            <button className="px-3 py-1 border border-gray-300 rounded text-sm hover:bg-gray-50">
-              2
-            </button>
-            <button className="px-3 py-1 border border-gray-300 rounded text-sm hover:bg-gray-50">
-              3
-            </button>
-            <button className="px-3 py-1 border border-gray-300 rounded text-sm hover:bg-gray-50">
-              Next
-            </button>
-          </div>
-        </div>
-      </div>
+     {/* Recent Invoices Table */}
+<Suspense key={query + currentPage} fallback={<div>Loading table...</div>}>
+  <InvoicesTableWrapper 
+    query={query}
+    currentPage={currentPage}
+  />
+</Suspense>
     </main>
   );
 }

@@ -34,7 +34,7 @@ export async function LatestInvoices() {
           </div>
         ))}
         <div className="flex items-center pb-2 pt-6">
-          <p className="text-sm text-gray-500">Last {latestInvoices.length} invoices</p>
+          <p className="text-sm text-gray-500">Number of {latestInvoices.length} invoices</p>
         </div>
       </div>
     </div>

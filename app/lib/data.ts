@@ -286,3 +286,91 @@ export async function fetchFilteredCustomers(query: string) {
     throw new Error('Failed to fetch customer table.');
   }
 }
+
+export async function createInvoice(invoiceData: {
+  customer_id: number;
+  amount: number;
+  status: string;
+  date: string;
+}) {
+  try {
+    const sql = neon(`${process.env.DATABASE_URL}`);
+    
+    const result = await sql`
+      INSERT INTO invoices (customer_id, amount, status, date)
+      VALUES (${invoiceData.customer_id}, ${invoiceData.amount}, ${invoiceData.status}, ${invoiceData.date})
+      RETURNING *
+    `;
+    
+    return result[0];
+  } catch (err) {
+    console.error('Database Error:', err);
+    throw new Error('Failed to create invoice.');
+  }
+}
+
+export async function getInvoiceById(id: number) {
+  try {
+    const sql = neon(`${process.env.DATABASE_URL}`);
+    
+    const result = await sql`
+      SELECT invoices.*, customers.name, customers.email, customers.image_url
+      FROM invoices
+      JOIN customers ON invoices.customer_id = customers.id
+      WHERE invoices.id = ${id}
+    `;
+    
+    return result[0];
+  } catch (err) {
+    console.error('Database Error:', err);
+    throw new Error('Failed to fetch invoice.');
+  }
+}
+
+export async function updateInvoice(id: number, updates: {
+  customer_id?: number;
+  amount?: number;
+  status?: string;
+}) {
+  try {
+    const sql = neon(`${process.env.DATABASE_URL}`);
+    
+    const setClause = Object.entries(updates)
+      .filter(([_, value]) => value !== undefined)
+      .map(([key, _]) => `${key} = $${key}`)
+      .join(', ');
+    
+    if (!setClause) {
+      throw new Error('No fields to update');
+    }
+    
+    const result = await sql`
+      UPDATE invoices 
+      SET ${sql.unsafe(setClause)}
+      WHERE id = ${id}
+      RETURNING *
+    `;
+    
+    return result[0];
+  } catch (err) {
+    console.error('Database Error:', err);
+    throw new Error('Failed to update invoice.');
+  }
+}
+
+export async function deleteInvoice(id: number) {
+  try {
+    const sql = neon(`${process.env.DATABASE_URL}`);
+    
+    const result = await sql`
+      DELETE FROM invoices 
+      WHERE id = ${id}
+      RETURNING id
+    `;
+    
+    return result.length > 0;
+  } catch (err) {
+    console.error('Database Error:', err);
+    throw new Error('Failed to delete invoice.');
+  }
+}
