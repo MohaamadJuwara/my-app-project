@@ -40,11 +40,11 @@ export default function Page() {
       <div className="mt-4 flex grow flex-col gap-4 md:flex-row">
         <div className="flex flex-col justify-center gap-6 rounded-lg bg-gray-50 px-6 py-10 md:w-2/5 md:px-20">
           <p className={`text-xl text-gray-800 md:text-3xl md:leading-normal`}>
-            <strong>Welcome to Juwara Solutions.</strong> This is the example for the{' '}
+            <strong>Welcome to Juwara Solutions.</strong> We build smart, reliable software{' '}
             <a href="https://nextjs.org/learn/" className="text-blue-500">
-              Juwara Solutions
+            and apps that help your business grow. 
             </a>
-            , brought to you by Juwara Solutions.
+            , Our team of experts is dedicated to providing you with the best possible service and support.
           </p>
           <Link
             href="/dashboard"
