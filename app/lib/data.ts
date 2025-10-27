@@ -208,6 +208,11 @@ export async function fetchInvoicesPages(query: string) {
 
 export async function fetchInvoiceById(id: string) {
   try {
+    if (!process.env.DATABASE_URL) {
+      console.error('Database URL not configured');
+      return null;
+    }
+    
     const sql = neon(`${process.env.DATABASE_URL}`);
     
     const data = await sql`
@@ -229,12 +234,17 @@ export async function fetchInvoiceById(id: string) {
     return invoice[0];
   } catch (error) {
     console.error('Database Error:', error);
-    throw new Error('Failed to fetch invoice.');
+    return null;
   }
 }
 
 export async function fetchCustomers() {
   try {
+    if (!process.env.DATABASE_URL) {
+      console.error('Database URL not configured');
+      return [];
+    }
+    
     const sql = neon(`${process.env.DATABASE_URL}`);
     
     const customers = await sql`
@@ -248,7 +258,7 @@ export async function fetchCustomers() {
     return customers;
   } catch (err) {
     console.error('Database Error:', err);
-    throw new Error('Failed to fetch all customers.');
+    return [];
   }
 }
 

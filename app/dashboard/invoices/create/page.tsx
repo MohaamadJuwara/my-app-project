@@ -1,6 +1,8 @@
 import Form from '../../../ui/invoices/create-form';
 import { fetchCustomers } from '../../../lib/data';
 import Breadcrumbs from '../../../ui/invoices/breadcrumbs';
+
+export const dynamic = 'force-dynamic';
     
 export default async function Page() {
   const customers = await fetchCustomers();
