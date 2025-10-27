@@ -40,73 +40,46 @@ export default function Page() {
 
   return (
     <main className="flex min-h-screen flex-col p-6">
-      <div className={styles.shape}/>
-      
-      {/* Navigation Bar */}
-      <nav className="flex items-center justify-between mb-6">
      
-        <div className="flex items-center space-x-4">
-          <Link
-            href="/dashboard"
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
-          >
-            Get Started
+      {/* Navigation Bar */}
+      <nav className="flex items-center mb-6 px-4 bg-blue-50">
+        <Link href="/" className="hover:opacity-80 transition-opacity">
+          <AcmeLogo /> 
+        </Link>
+        <div className="hidden md:flex items-center space-x-10 ml-8">
+          <Link href="/services" className="text-gray-700 font-bold hover:text-blue-600 transition-colors">
+            Services
           </Link>
-          {/* Mobile menu button */}
-          <button 
-            className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
-            aria-label="Toggle mobile menu"
-          >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path>
-            </svg>
-          </button>
+          <Link href="/products" className="text-gray-700 font-bold hover:text-blue-600 transition-colors">
+            Projects
+          </Link>
+          <Link href="/about-us" className="text-gray-700 font-bold hover:text-blue-600 transition-colors">
+            About Us
+          </Link>
+          <Link href="/contact-us" className="text-gray-700 font-bold justify-end hover:text-blue-600 transition-colors">
+            Contact Us
+          </Link>
+        </div>
+        <div className="hidden md:flex items-center space-x-6 ml-auto">
+          <Link href="/login" className="text-gray-700 font-bold hover:text-blue-600 transition-colors">
+            Login
+          </Link>
+          <Link href="/demo-request" className="text-gray-700 font-bold hover:text-blue-600 transition-colors">
+            Demo request
+          </Link>
         </div>
       </nav>
 
-      {/* Mobile Menu */}
-      <div id="mobile-menu" className="hidden md:hidden mb-6 bg-white rounded-lg shadow-md border border-gray-200 p-4">
-        <div className="flex flex-col space-y-3">
-          <Link href="/dashboard" className="text-gray-700 hover:text-blue-600 transition-colors py-2">
-            Dashboard
-          </Link>
-          <Link href="/dashboard/products" className="text-gray-700 hover:text-blue-600 transition-colors py-2">
-            Product
-          </Link>
-          <Link href="/blog" className="text-gray-700 hover:text-blue-600 transition-colors py-2">
-            Blog
-          </Link>
-        </div>
-      </div>
-
-      <div className="flex h-20 shrink-0 items-end rounded-lg bg-blue-500 p-4 md:h-52">
-        <AcmeLogo    /> 
       
-          <Link href="/" className="text-xl font-bold text-gray-900 hover:text-blue-600 transition-colors">
-            Juwara Solutions
-          </Link>
-          <div className="hidden md:flex items-center space-x-6">
-            <Link href="/dashboard" className="text-gray-700 hover:text-blue-600 transition-colors">
-              Dashboard
-            </Link>
-            <Link href="/dashboard/products" className="text-gray-700 hover:text-blue-600 transition-colors">
-              Product
-            </Link>
-            <Link href="/blog" className="text-gray-700 hover:text-blue-600 transition-colors">
-              Blog
-            </Link>
-        
-        </div>
-      </div>
       
       <div className="mt-4 flex grow flex-col gap-4 md:flex-row">
         <div className="flex flex-col justify-center gap-6 rounded-lg bg-gray-50 px-6 py-10 md:w-2/5 md:px-20">
           <p className={`text-xl text-gray-800 md:text-3xl md:leading-normal`}>
-            <strong>Welcome to Juwara Solutions.</strong> We build smart, reliable software{' '}
+            <strong>Empower your business with Juwara Solutions.</strong> We build smart, reliable software.{' '}
             <a href="https://nextjs.org/learn/" className="text-blue-500">
-            and apps that help your business grow. 
+            Juwara Solutions creates smart, reliable websites and apps that help your business grow. From automation and performance optimization to custom digital experiences,
             </a>
-            , Our team of experts is dedicated to providing you with the best possible service and support.
+            we provide the tools and technology to help you stand out and scale with confidence—whether you’re just starting or expanding.
           </p>
           <Link
             href="/dashboard"

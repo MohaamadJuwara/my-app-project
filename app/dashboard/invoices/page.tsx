@@ -14,22 +14,15 @@ import {
   MagnifyingGlassIcon,
   FunnelIcon 
 } from '@heroicons/react/24/outline';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useState } from 'react';
+import Link from 'next/link';
 
 export default function InvoicesPage() {
-  const pathname = usePathname();
-  const { replace } = useRouter();  
-  const searchParams = useSearchParams();
-  const query = searchParams.get('query') || '';
-  const currentPage = parseInt(searchParams.get('page') || '1');
+  const [query, setQuery] = useState('');
+  const currentPage = 1;
+  
   function handleSearch(term: string) {
-    const params = new URLSearchParams(searchParams);
-    if (term) {
-      params.set('query', term);
-    } else {
-      params.delete('query');
-    }
-    replace(`${pathname}?${params.toString()}`);
+    setQuery(term);
   }
   return (
     <main>
@@ -37,10 +30,14 @@ export default function InvoicesPage() {
         <h1 className="text-xl md:text-2xl font-bold">
           Invoices Management
         </h1>
-        <button className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-500">
+        
+        <Link 
+          href="/dashboard/invoices/create"
+          className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-500"
+        >
           <PlusIcon className="h-4 w-4" />
           Create Invoice
-        </button>
+        </Link>
       </div>
       
       {/* Invoice Stats Cards */}
@@ -88,7 +85,7 @@ export default function InvoicesPage() {
             placeholder="Search invoices..."
             value={query}
             onChange={(e) => handleSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full pl-10 pr-4 py-2 bg-white text-gray-900 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
         </div>
         <button className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
