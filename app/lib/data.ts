@@ -9,9 +9,16 @@ import {
 } from './definitions';
 import { formatCurrency } from './utils';
 
+function getSql() {
+  if (!process.env.DATABASE_URL) {
+    throw new Error('Database URL is not configured');
+  }
+  return neon(`${process.env.DATABASE_URL}`);
+}
+
 export async function fetchRevenue(): Promise<Revenue[]> {
   try {
-    const sql = neon(`${process.env.DATABASE_URL}`);
+    const sql = getSql();
     
     // Check if revenue table exists, if not create it with sample data
     try {
@@ -69,7 +76,7 @@ export async function fetchRevenue(): Promise<Revenue[]> {
 
 export async function fetchLatestInvoices(): Promise<LatestInvoiceRaw[]> {
   try {
-    const sql = neon(`${process.env.DATABASE_URL}`);
+    const sql = getSql();
     
     // Update the existing invoices table to include date column if it doesn't exist
     try {
@@ -104,7 +111,7 @@ export async function fetchLatestInvoices(): Promise<LatestInvoiceRaw[]> {
 
 export async function fetchCardData() {
   try {
-    const sql = neon(`${process.env.DATABASE_URL}`);
+    const sql = getSql();
     
     // You can probably combine these into a single SQL query
     // However, we are intentionally splitting them to demonstrate
@@ -153,7 +160,7 @@ export async function fetchFilteredInvoices(
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
 
   try {
-    const sql = neon(`${process.env.DATABASE_URL}`);
+    const sql = getSql();
     
     const invoices = await sql`
       SELECT
@@ -185,7 +192,7 @@ export async function fetchFilteredInvoices(
 
 export async function fetchInvoicesPages(query: string) {
   try {
-    const sql = neon(`${process.env.DATABASE_URL}`);
+    const sql = getSql();
     
     const data = await sql`SELECT COUNT(*)
     FROM invoices
@@ -208,7 +215,12 @@ export async function fetchInvoicesPages(query: string) {
 
 export async function fetchInvoiceById(id: string) {
   try {
-    const sql = neon(`${process.env.DATABASE_URL}`);
+    if (!process.env.DATABASE_URL) {
+      console.error('Database URL not configured');
+      return null;
+    }
+    
+    const sql = getSql();
     
     const data = await sql`
       SELECT
@@ -229,13 +241,18 @@ export async function fetchInvoiceById(id: string) {
     return invoice[0];
   } catch (error) {
     console.error('Database Error:', error);
-    throw new Error('Failed to fetch invoice.');
+    return null;
   }
 }
 
 export async function fetchCustomers() {
   try {
-    const sql = neon(`${process.env.DATABASE_URL}`);
+    if (!process.env.DATABASE_URL) {
+      console.error('Database URL not configured');
+      return [];
+    }
+    
+    const sql = getSql();
     
     const customers = await sql`
       SELECT
@@ -248,13 +265,13 @@ export async function fetchCustomers() {
     return customers;
   } catch (err) {
     console.error('Database Error:', err);
-    throw new Error('Failed to fetch all customers.');
+    return [];
   }
 }
 
 export async function fetchFilteredCustomers(query: string) {
   try {
-    const sql = neon(`${process.env.DATABASE_URL}`);
+    const sql = getSql();
     
     const data = await sql`
 		SELECT
@@ -284,5 +301,93 @@ export async function fetchFilteredCustomers(query: string) {
   } catch (err) {
     console.error('Database Error:', err);
     throw new Error('Failed to fetch customer table.');
+  }
+}
+
+export async function createInvoice(invoiceData: {
+  customer_id: number;
+  amount: number;
+  status: string;
+  date: string;
+}) {
+  try {
+    const sql = getSql();
+    
+    const result = await sql`
+      INSERT INTO invoices (customer_id, amount, status, date)
+      VALUES (${invoiceData.customer_id}, ${invoiceData.amount}, ${invoiceData.status}, ${invoiceData.date})
+      RETURNING *
+    `;
+    
+    return result[0];
+  } catch (err) {
+    console.error('Database Error:', err);
+    throw new Error('Failed to create invoice.');
+  }
+}
+
+export async function getInvoiceById(id: number) {
+  try {
+    const sql = getSql();
+    
+    const result = await sql`
+      SELECT invoices.*, customers.name, customers.email, customers.image_url
+      FROM invoices
+      JOIN customers ON invoices.customer_id = customers.id
+      WHERE invoices.id = ${id}
+    `;
+    
+    return result[0];
+  } catch (err) {
+    console.error('Database Error:', err);
+    throw new Error('Failed to fetch invoice.');
+  }
+}
+
+export async function updateInvoice(id: number, updates: {
+  customer_id?: number;
+  amount?: number;
+  status?: string;
+}) {
+  try {
+    const sql = getSql();
+    
+    const setClause = Object.entries(updates)
+      .filter(([_, value]) => value !== undefined)
+      .map(([key, _]) => `${key} = $${key}`)
+      .join(', ');
+    
+    if (!setClause) {
+      throw new Error('No fields to update');
+    }
+    
+    const result = await sql`
+      UPDATE invoices 
+      SET ${sql.unsafe(setClause)}
+      WHERE id = ${id}
+      RETURNING *
+    `;
+    
+    return result[0];
+  } catch (err) {
+    console.error('Database Error:', err);
+    throw new Error('Failed to update invoice.');
+  }
+}
+
+export async function deleteInvoice(id: number) {
+  try {
+    const sql = getSql();
+    
+    const result = await sql`
+      DELETE FROM invoices 
+      WHERE id = ${id}
+      RETURNING id
+    `;
+    
+    return result.length > 0;
+  } catch (err) {
+    console.error('Database Error:', err);
+    throw new Error('Failed to delete invoice.');
   }
 }
