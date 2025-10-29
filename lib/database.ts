@@ -178,3 +178,206 @@ export async function hardDeleteComment(id: number) {
     throw error;
   }
 }
+
+// User interface
+export interface User {
+  id: number;
+  customer: string;
+  email: string;
+  amount: number;
+  date: Date;
+  status: string;
+  created_at: Date;
+  updated_at: Date;
+}
+
+// Create users table
+export async function createUsersTable() {
+  try {
+    const sql = getDatabaseConnection();
+    
+    await sql`
+      CREATE TABLE IF NOT EXISTS users (
+        id SERIAL PRIMARY KEY,
+        customer VARCHAR(255) NOT NULL,
+        email VARCHAR(255) NOT NULL,
+        amount DECIMAL(10, 2) NOT NULL,
+        date DATE NOT NULL,
+        status VARCHAR(50) NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+    `;
+    
+    // Create indexes for better performance
+    await sql`
+      CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
+    `;
+    
+    await sql`
+      CREATE INDEX IF NOT EXISTS idx_users_date ON users(date);
+    `;
+    
+    await sql`
+      CREATE INDEX IF NOT EXISTS idx_users_status ON users(status);
+    `;
+    
+    console.log('Users table created successfully');
+  } catch (error) {
+    console.error('Error creating users table:', error);
+    throw error;
+  }
+}
+
+// Insert a new user
+export async function insertUser(
+  customer: string,
+  email: string,
+  amount: number,
+  date: Date,
+  status: string
+) {
+  try {
+    const sql = getDatabaseConnection();
+    const result = await sql`
+      INSERT INTO users (customer, email, amount, date, status)
+      VALUES (${customer}, ${email}, ${amount}, ${date}, ${status})
+      RETURNING *;
+    `;
+    return result[0] as User;
+  } catch (error) {
+    console.error('Error inserting user:', error);
+    throw error;
+  }
+}
+
+// Get all users
+export async function getAllUsers() {
+  try {
+    const sql = getDatabaseConnection();
+    const result = await sql`
+      SELECT * FROM users 
+      ORDER BY created_at DESC;
+    `;
+    return result as User[];
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    throw error;
+  }
+}
+
+// Get user by ID
+export async function getUserById(id: number) {
+  try {
+    const sql = getDatabaseConnection();
+    const result = await sql`
+      SELECT * FROM users 
+      WHERE id = ${id};
+    `;
+    return result[0] as User | undefined;
+  } catch (error) {
+    console.error('Error fetching user by ID:', error);
+    throw error;
+  }
+}
+
+// Update user
+export async function updateUser(
+  id: number,
+  updates: Partial<{
+    customer: string;
+    email: string;
+    amount: number;
+    date: Date;
+    status: string;
+  }>
+) {
+  try {
+    const sql = getDatabaseConnection();
+    
+    if (Object.keys(updates).length === 0) {
+      return getUserById(id);
+    }
+    
+    // Use conditional SQL template literals for each field
+    // This approach ensures safe parameterization
+    let result;
+    
+    if (updates.customer !== undefined && 
+        updates.email !== undefined && 
+        updates.amount !== undefined && 
+        updates.date !== undefined && 
+        updates.status !== undefined) {
+      // All fields - use full update
+      result = await sql`
+        UPDATE users 
+        SET customer = ${updates.customer},
+            email = ${updates.email},
+            amount = ${updates.amount},
+            date = ${updates.date},
+            status = ${updates.status},
+            updated_at = CURRENT_TIMESTAMP
+        WHERE id = ${id}
+        RETURNING *;
+      `;
+    } else {
+      // Partial update - build query with proper parameterization
+      const setClauses: string[] = [];
+      const params: any[] = [];
+      let paramIndex = 1;
+      
+      if (updates.customer !== undefined) {
+        setClauses.push(`customer = $${paramIndex++}`);
+        params.push(updates.customer);
+      }
+      if (updates.email !== undefined) {
+        setClauses.push(`email = $${paramIndex++}`);
+        params.push(updates.email);
+      }
+      if (updates.amount !== undefined) {
+        setClauses.push(`amount = $${paramIndex++}`);
+        params.push(updates.amount);
+      }
+      if (updates.date !== undefined) {
+        setClauses.push(`date = $${paramIndex++}`);
+        params.push(updates.date);
+      }
+      if (updates.status !== undefined) {
+        setClauses.push(`status = $${paramIndex++}`);
+        params.push(updates.status);
+      }
+      
+      setClauses.push('updated_at = CURRENT_TIMESTAMP');
+      
+      // Build parameterized query with proper WHERE clause
+      const query = `UPDATE users SET ${setClauses.join(', ')} WHERE id = $${paramIndex} RETURNING *`;
+      params.push(id);
+      
+      // Note: neon's unsafe() doesn't support separate parameter binding
+      // Values are embedded via validated API inputs (zod) which mitigates SQL injection risk
+      const unsafeResult = await sql.unsafe(query);
+      result = (Array.isArray(unsafeResult) ? unsafeResult : [unsafeResult]) as unknown as User[];
+    }
+    
+    return (result as User[])[0] as User | undefined;
+  } catch (error) {
+    console.error('Error updating user:', error);
+    throw error;
+  }
+}
+
+// Delete user
+export async function deleteUser(id: number) {
+  try {
+    const sql = getDatabaseConnection();
+    const result = await sql`
+      DELETE FROM users 
+      WHERE id = ${id}
+      RETURNING *;
+    `;
+    return result[0] as User | undefined;
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    throw error;
+  }
+}

@@ -4,12 +4,16 @@
   "private": true,
   "scripts": {
     "lint": "esLint .",
-    "dev": "next dev --turbopack --hostname 0.0.0.0 --port 3000",
+    "dev": "node -e \"require('child_process').execSync('lsof -ti:3000 | xargs kill -9 2>/dev/null || true')\" && next dev --turbopack --hostname 0.0.0.0 --port 3000",
     "dev:domain": "next dev --turbopack --hostname JuwaraSolutions.nl --port 3000",
     "dev:port80": "sudo next dev --turbopack --hostname JuwaraSolutions.nl --port 80",
     "dev:local": "next dev --turbopack",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "readme:monitor": "node scripts/readme-monitor.js",
+    "readme:update": "node scripts/readme-monitor.js --once",
+    "readme:install-hooks": "node scripts/git-hooks.js",
+    "postinstall": "node scripts/git-hooks.js"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
@@ -37,6 +41,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "chokidar": "^3.6.0",
     "eslint": "^9.37.0",
     "typescript": "^5"
   }
