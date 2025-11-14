@@ -375,6 +375,7 @@ This project uses [`next/font`](https://nextjs.org/docs/app/building-your-applic
 
 - `createInvoice()` (exported)
 - `updateInvoice()` (exported)
+- `deleteInvoice()` (exported)
 - `getSql()` 
 
 ### lib/database.ts
@@ -560,5 +561,5 @@ curl -X PUT http://localhost:3000/api/users/1 \
 - 10/29/2025: Updated `app/api/users/[id]/route.ts`
 - 10/29/2025: Updated `app/api/users/route.ts`
 
-_Last updated: 2025-10-29_
+_Last updated: 2025-10-30_
 

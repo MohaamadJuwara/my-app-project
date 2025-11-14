@@ -62,13 +62,15 @@ export async function updateInvoice(id: string, formData: FormData) {
   
   const { amount } = validatedFields.data;
   const amountInCents = amount * 100;
+  const date = new Date().toISOString().split('T')[0];
 
   const sql = getSql();
   await sql`
     UPDATE invoices
     SET customer_id = ${validatedFields.data.customerId}, 
         amount = ${amountInCents}, 
-        status = ${validatedFields.data.status}
+        status = ${validatedFields.data.status},
+        date = ${date}
     WHERE id = ${id}
   `;
 
@@ -77,3 +79,37 @@ export async function updateInvoice(id: string, formData: FormData) {
   return { message: 'Invoice updated successfully' };
 }
 
+export async function deleteInvoice(id: string) {
+  const sql = getSql();
+  
+  // Convert string ID to number
+  const invoiceId = parseInt(id);
+  
+  if (isNaN(invoiceId)) {
+    throw new Error('Invalid invoice ID');
+  }
+  
+  try {
+    // Use RETURNING to verify deletion actually happened
+    const result = await sql`
+      DELETE FROM invoices
+      WHERE id = ${invoiceId}
+      RETURNING id
+    `;
+    
+    // Check if invoice was actually deleted
+    if (!result || result.length === 0) {
+      throw new Error(`Invoice with ID ${invoiceId} not found`);
+    }
+    
+    revalidatePath('/dashboard/invoices');
+    redirect('/dashboard/invoices');
+  } catch (error) {
+    console.error('Error deleting invoice:', error);
+    // Re-throw redirect errors (they're expected by Next.js)
+    if (error && typeof error === 'object' && 'digest' in error) {
+      throw error; // This is a Next.js redirect
+    }
+    throw new Error(`Failed to delete invoice: ${error instanceof Error ? error.message : 'Unknown error'}`);
+  }
+}
